@@ -8,9 +8,11 @@
 
 import UIKit
 
-class KeyboardViewController: UIInputViewController {
+class KeyboardViewController: UIInputViewController, UITextFieldDelegate {
 
     @IBOutlet var nextKeyboardButton: UIButton!
+    @IBOutlet var deleteButton: UIButton!
+    @IBOutlet var returnButton: UIButton!
     
     var keyboardView: UIView!
 
@@ -24,6 +26,8 @@ class KeyboardViewController: UIInputViewController {
         super.viewDidLoad()
         loadInterface()
     }
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -44,8 +48,27 @@ class KeyboardViewController: UIInputViewController {
         keyboardView.frame = view.frame
         view.addSubview(keyboardView)
         view.backgroundColor = keyboardView.backgroundColor
-        nextKeyboardButton.addTarget(self, action: "advanceToNextInputMode", forControlEvents: .TouchUpInside) // advanceToNextInputMode is already defined in template
+        nextKeyboardButton.addTarget(self, action: "advanceToNextInputMode", forControlEvents: .TouchUpInside)
+    }
+    
+    @IBAction func didTapDelete(sender: AnyObject) {
+        let proxy = self.textDocumentProxy as UITextDocumentProxy
+        proxy.deleteBackward()
     }
 
 
+    @IBAction func didTapReturn(sender: AnyObject) {
+        let proxy = self.textDocumentProxy as UITextDocumentProxy
+        proxy.insertText("\n")
+        self.dismissKeyboard()
+    }
+    
+    @IBAction func didTapInputNumber(number: UIButton) {
+        let proxy = self.textDocumentProxy as UITextDocumentProxy
+        proxy.insertText(number.titleLabel!.text!)
+    }
+    @IBAction func didTapSpace(sender: UIButton) {
+        let proxy = self.textDocumentProxy as UITextDocumentProxy
+        proxy.insertText(" ")
+    }
 }
